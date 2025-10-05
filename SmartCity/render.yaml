@@ -1,0 +1,12 @@
+# Configuration Render pour Smart City App
+services:
+  - type: web
+    name: smartcity-app
+    env: node
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18
+      - key: PORT
+        value: 3000

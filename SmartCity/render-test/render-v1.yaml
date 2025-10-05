@@ -1,0 +1,11 @@
+# Version 1: Configuration basique site statique
+services:
+  - type: web
+    name: smartcity-test-v1
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

@@ -1,0 +1,10 @@
+# Version 3: Avec script start personnalisé
+services:
+  - type: web
+    name: smartcity-test-v3
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 18
