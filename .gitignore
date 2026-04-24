@@ -1,0 +1,98 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+/.nyc_output
+
+# Production
+/build
+/dist
+/.next
+out/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.*.example
+
+# Editor directories and files
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# IDE
+*.iml
+.gradle
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Docker
+.docker
+
+# Mobile
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# OS specific
+Thumbs.db
+.directory
+
+# Temp files
+*.tmp
+*.bak
+*~
+.#*
+
+# Redis
+dump.rdb
+
+# PostgreSQL
+*.sql
+!migrations/*.sql
+
+# SSL certificates
+*.pem
+*.crt
+*.key
+
+# Upload directories
+uploads/
+tmp/
+cache/
+
+# Compiled
+*.tsbuildinfo
