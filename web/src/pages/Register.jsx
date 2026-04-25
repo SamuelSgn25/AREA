@@ -1,109 +1,117 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useNotification } from '../components/Notification';
-import { authAPI } from '../services/api';
-import { useAuthStore } from '../store/store';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
 
-function Register() {
-  const navigate = useNavigate();
-  const notify = useNotification();
-  const login = useAuthStore((state) => state.login);
-  const [form, setForm] = useState({
-    firstName: 'Demo',
-    lastName: 'User',
-    username: 'demouser',
-    email: 'demo@area.local',
-    password: 'demo1234'
+const Register = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: ''
   });
-  const [providers, setProviders] = useState([]);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    authAPI.oauthProviders().then((response) => {
-      setProviders(response.data.data || []);
-    });
-  }, []);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    authAPI
-      .register(form)
-      .then((response) => {
-        login(response.data.data.user, response.data.data.accessToken);
-        notify.success('Compte cree', 'Votre espace AREA est pret.');
-        navigate('/');
-      })
-      .catch(() => notify.error('Inscription impossible', 'Verifiez vos informations ou utilisez un autre email.'));
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post('http://localhost:8080/api/auth/register', formData);
+      navigate('/login');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Registration failed');
+    }
   };
 
   return (
-    <section className="auth-layout">
-      <article className="auth-panel feature-panel feature-panel-alt">
-        <p className="eyebrow">Launch</p>
-        <h2>Activez vos premieres automatisations en quelques minutes.</h2>
-        <p>
-          Le backend cree aussi un jeu de notifications de demarrage pour vous aider a valider le flux.
-        </p>
-      </article>
-      <article className="auth-panel form-panel">
-        <h2>Inscription</h2>
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <label>
-            Prenom
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 relative overflow-hidden">
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-700"></div>
+
+      <div className="w-full max-w-lg p-8 m-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl z-10">
+        <h2 className="text-4xl font-bold text-white text-center mb-6 tracking-tight">Create Account</h2>
+        
+        {error && (
+          <div className="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-2 rounded-xl mb-6 text-sm text-center">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleRegister} className="grid grid-cols-2 gap-4">
+          <div className="col-span-1">
+            <label className="block text-sm font-medium text-purple-100 mb-2 ml-1">First Name</label>
             <input
-              value={form.firstName}
-              onChange={(event) => setForm((current) => ({ ...current, firstName: event.target.value }))}
+              name="firstName"
+              onChange={handleChange}
+              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:bg-white/10 transition-all"
+              placeholder="John"
+              required
             />
-          </label>
-          <label>
-            Nom
+          </div>
+          <div className="col-span-1">
+            <label className="block text-sm font-medium text-purple-100 mb-2 ml-1">Last Name</label>
             <input
-              value={form.lastName}
-              onChange={(event) => setForm((current) => ({ ...current, lastName: event.target.value }))}
+              name="lastName"
+              onChange={handleChange}
+              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:bg-white/10 transition-all"
+              placeholder="Doe"
+              required
             />
-          </label>
-          <label>
-            Pseudo
+          </div>
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-purple-100 mb-2 ml-1">Username</label>
             <input
-              value={form.username}
-              onChange={(event) => setForm((current) => ({ ...current, username: event.target.value }))}
+              name="username"
+              onChange={handleChange}
+              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:bg-white/10 transition-all"
+              placeholder="johndoe123"
+              required
             />
-          </label>
-          <label>
-            Email
+          </div>
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-purple-100 mb-2 ml-1">Email Address</label>
             <input
+              name="email"
               type="email"
-              value={form.email}
-              onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
+              onChange={handleChange}
+              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:bg-white/10 transition-all"
+              placeholder="name@example.com"
+              required
             />
-          </label>
-          <label>
-            Mot de passe
+          </div>
+          <div className="col-span-2">
+            <label className="block text-sm font-medium text-purple-100 mb-2 ml-1">Password</label>
             <input
+              name="password"
               type="password"
-              value={form.password}
-              onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
+              onChange={handleChange}
+              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:bg-white/10 transition-all"
+              placeholder="••••••••"
+              required
             />
-          </label>
-          <button type="submit" className="primary-button">
-            Creer le compte
+          </div>
+
+          <button
+            type="submit"
+            className="col-span-2 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold rounded-2xl shadow-lg transform hover:scale-[1.01] transition-all mt-4"
+          >
+            Create Account
           </button>
         </form>
-        <div className="oauth-block">
-          <p className="eyebrow">Providers disponibles</p>
-          <div className="service-actions">
-            {providers.map((provider) => (
-              <span key={provider.id} className="pill pill-idle">
-                {provider.name}
-              </span>
-            ))}
-          </div>
-        </div>
-        <p className="auth-hint">
-          Deja inscrit ? <Link to="/login">Se connecter</Link>
+
+        <p className="mt-8 text-center text-purple-100/70 text-sm">
+          Already have an account?{' '}
+          <Link to="/login" className="text-pink-400 font-semibold hover:underline">
+            Login
+          </Link>
         </p>
-      </article>
-    </section>
+      </div>
+    </div>
   );
-}
+};
 
 export default Register;
