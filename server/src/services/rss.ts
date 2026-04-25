@@ -1,4 +1,4 @@
-import { Service } from '../../models';
+import { Service } from '../models';
 
 /**
  * RSS Feed Service Integration
