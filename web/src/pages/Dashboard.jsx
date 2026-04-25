@@ -1,140 +1,100 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { notificationsAPI, servicesAPI, workflowsAPI } from '../services/api';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-function Dashboard() {
-  const [services, setServices] = useState([]);
-  const [workflows, setWorkflows] = useState([]);
-  const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Dashboard = () => {
+  const [stats, setStats] = useState({
+    activeWorkflows: 3,
+    totalExecutions: 154,
+    connectedServices: 4,
+    uptime: '99.9%'
+  });
 
-  useEffect(() => {
-    Promise.all([servicesAPI.list(), workflowsAPI.list(), notificationsAPI.list()])
-      .then(([servicesResponse, workflowsResponse, notificationsResponse]) => {
-        setServices(servicesResponse.data.data || []);
-        setWorkflows(workflowsResponse.data.data || []);
-        setNotifications(notificationsResponse.data.data || []);
-      })
-      .finally(() => setLoading(false));
-  }, []);
-
-  const connectedCount = services.filter((service) => service.connected).length;
-  const activeWorkflows = workflows.filter((workflow) => workflow.isActive).length;
-  const unreadNotifications = notifications.filter((notification) => !notification.read).length;
+  const recentActivity = [
+    { id: 1, action: 'GitHub Commit', reaction: 'Discord Notify', status: 'Success', time: '2 mins ago' },
+    { id: 2, action: 'Spotify Track', reaction: 'Slack Message', status: 'Success', time: '15 mins ago' },
+    { id: 3, action: 'Gmail Received', reaction: 'Drive Backup', status: 'Failed', time: '1 hour ago' },
+  ];
 
   return (
-    <section className="page">
-      <div className="hero-panel">
+    <div className="p-8 max-w-7xl mx-auto space-y-8">
+      <header className="flex justify-between items-center">
         <div>
-          <p className="eyebrow">Vue d'ensemble</p>
-          <h2>Coordonnez vos services et laissez AREA agir a votre place.</h2>
-          <p className="hero-copy">
-            Le tableau de bord rassemble vos integrations, vos automatisations et les notifications
-            importantes dans une interface claire, rapide et mobile.
-          </p>
-          <div className="hero-actions">
-            <Link to="/services" className="primary-button">
-              Explorer les services
-            </Link>
-            <Link to="/workflows" className="ghost-button primary-ghost">
-              Gerer les workflows
-            </Link>
-          </div>
+          <h1 className="text-4xl font-bold gradient-text">Dashboard</h1>
+          <p className="text-slate-400 mt-2">Welcome back, Samuel. Here's what's happening.</p>
         </div>
-        <div className="hero-orbit">
-          <span>OAuth2</span>
-          <span>Notifications</span>
-          <span>Actions</span>
-          <span>Reactions</span>
-        </div>
+        <button className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-xl shadow-indigo-900/40 transition-all transform hover:scale-105">
+          + New AREA
+        </button>
+      </header>
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard title="Active Workflows" value={stats.activeWorkflows} icon="⚡" />
+        <StatCard title="Total Executions" value={stats.totalExecutions} icon="🔄" />
+        <StatCard title="Services Linked" value={stats.connectedServices} icon="🔗" />
+        <StatCard title="Engine Uptime" value={stats.uptime} icon="🛡️" />
       </div>
 
-      <div className="stats-grid">
-        <article className="stat-card accent-teal">
-          <p>Services connectes</p>
-          <strong>{loading ? '...' : connectedCount}</strong>
-          <span>Liens actifs avec vos outils.</span>
-        </article>
-        <article className="stat-card accent-amber">
-          <p>Workflows actifs</p>
-          <strong>{loading ? '...' : activeWorkflows}</strong>
-          <span>Automatisations en cours d'execution.</span>
-        </article>
-        <article className="stat-card accent-coral">
-          <p>Notifications non lues</p>
-          <strong>{loading ? '...' : unreadNotifications}</strong>
-          <span>Evenements a traiter rapidement.</span>
-        </article>
-      </div>
-
-      <div className="content-grid">
-        <article className="glass-card">
-          <div className="section-head">
-            <div>
-              <p className="eyebrow">Services</p>
-              <h3>Vos connectors</h3>
-            </div>
-            <Link to="/services">Voir tout</Link>
-          </div>
-          <div className="stack-list">
-            {services.slice(0, 4).map((service) => (
-              <div key={service.id} className="list-row">
-                <div>
-                  <strong>{service.icon} {service.name}</strong>
-                  <p>{service.description}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Recent Activity */}
+        <div className="lg:col-span-2 glass-card">
+          <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
+            <span className="w-2 h-6 bg-indigo-500 rounded-full"></span>
+            Recent Activity
+          </h3>
+          <div className="space-y-4">
+            {recentActivity.map((activity) => (
+              <div key={activity.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 hover:border-white/10 transition-all">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-indigo-500/20 rounded-xl text-xl">🚀</div>
+                  <div>
+                    <p className="font-semibold">{activity.action} → {activity.reaction}</p>
+                    <p className="text-xs text-slate-500">{activity.time}</p>
+                  </div>
                 </div>
-                <span className={`pill ${service.connected ? 'pill-live' : 'pill-idle'}`}>
-                  {service.connected ? 'Connecte' : 'Disponible'}
+                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                  activity.status === 'Success' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                }`}>
+                  {activity.status}
                 </span>
               </div>
             ))}
-            {!loading && services.length === 0 ? <p>Aucun service disponible pour le moment.</p> : null}
           </div>
-        </article>
+        </div>
 
-        <article className="glass-card">
-          <div className="section-head">
-            <div>
-              <p className="eyebrow">Workflows</p>
-              <h3>Scenarios recents</h3>
-            </div>
-            <Link to="/workflows">Ouvrir</Link>
+        {/* Quick Links */}
+        <div className="glass-card">
+          <h3 className="text-xl font-bold mb-6">Service Health</h3>
+          <div className="space-y-6">
+            <ServiceStatus name="GitHub" status="Online" color="green" />
+            <ServiceStatus name="Discord" status="Online" color="green" />
+            <ServiceStatus name="Google" status="Warning" color="yellow" />
+            <ServiceStatus name="Spotify" status="Online" color="green" />
           </div>
-          <div className="timeline">
-            {workflows.slice(0, 4).map((workflow) => (
-              <div key={workflow.id} className="timeline-item">
-                <div className="timeline-marker" />
-                <div>
-                  <strong>{workflow.name}</strong>
-                  <p>{workflow.description || 'Scenario automatise personnalise.'}</p>
-                </div>
-              </div>
-            ))}
-            {!loading && workflows.length === 0 ? <p>Créez votre premier workflow pour commencer.</p> : null}
-          </div>
-        </article>
-
-        <article className="glass-card full-span">
-          <div className="section-head">
-            <div>
-              <p className="eyebrow">Signals</p>
-              <h3>Flux de notifications</h3>
-            </div>
-          </div>
-          <div className="notification-stream">
-            {notifications.slice(0, 5).map((notification) => (
-              <div key={notification.id} className={`stream-card stream-${notification.type || 'info'}`}>
-                <strong>{notification.title}</strong>
-                <p>{notification.message}</p>
-                <span>{notification.read ? 'Lue' : 'Nouvelle'}</span>
-              </div>
-            ))}
-            {!loading && notifications.length === 0 ? <p>Aucune notification pour l'instant.</p> : null}
-          </div>
-        </article>
+        </div>
       </div>
-    </section>
+    </div>
   );
-}
+};
+
+const StatCard = ({ title, value, icon }) => (
+  <div className="glass-card flex items-center justify-between">
+    <div>
+      <p className="text-slate-400 text-sm font-medium">{title}</p>
+      <p className="text-3xl font-bold mt-1 tracking-tight">{value}</p>
+    </div>
+    <div className="text-3xl p-3 bg-white/5 rounded-2xl">{icon}</div>
+  </div>
+);
+
+const ServiceStatus = ({ name, status, color }) => (
+  <div className="flex items-center justify-between">
+    <div className="flex items-center gap-3">
+      <div className={`w-3 h-3 rounded-full bg-${color}-500 shadow-[0_0_10px_rgba(34,197,94,0.5)] animate-pulse`}></div>
+      <span className="font-medium">{name}</span>
+    </div>
+    <span className="text-sm text-slate-500">{status}</span>
+  </div>
+);
 
 export default Dashboard;
