@@ -6,29 +6,28 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint src --ext .ts,.tsx",
-    "lint:fix": "eslint src --ext .ts,.tsx --fix",
-    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "type-check": "tsc --noEmit"
+    "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix",
+    "format": "prettier --write \"src/**/*.{js,jsx,css}\""
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.16",
+    "@hookform/resolvers": "^3.3.4",
+    "axios": "^1.6.5",
+    "heroicons": "^2.0.18",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.1",
-    "axios": "^1.6.5",
-    "zustand": "^4.4.1",
-    "react-query": "^3.39.3",
-    "@hookform/resolvers": "^3.3.4",
     "react-hook-form": "^7.48.0",
+    "react-query": "^3.39.3",
+    "react-router-dom": "^6.20.1",
+    "tailwindcss": "^3.3.6",
     "zod": "^3.22.4",
-    "@headlessui/react": "^1.7.16",
-    "heroicons": "^2.0.18",
-    "tailwindcss": "^3.3.6"
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",
@@ -44,6 +43,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "postcss": "^8.4.31",
     "prettier": "^3.1.0",
+    "terser": "^5.46.2",
     "typescript": "^5.2.2",
     "vite": "^5.0.2",
     "vitest": "^1.0.4"
