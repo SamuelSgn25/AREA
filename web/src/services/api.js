@@ -23,6 +23,8 @@ apiClient.interceptors.request.use(config => {
 export const authAPI = {
   register: (data) => apiClient.post('/auth/register', data),
   login: (data) => apiClient.post('/auth/login', data),
+  oauthProviders: () => apiClient.get('/auth/providers'),
+  oauthStart: (provider) => apiClient.get(`/auth/${provider}`),
   getProfile: () => apiClient.get('/users/me'),
   updateProfile: (data) => apiClient.put('/users/me', data)
 };
