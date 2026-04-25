@@ -1,50 +1,57 @@
-:root {
-  color-scheme: dark;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background:
-    radial-gradient(circle at top, rgba(255, 145, 77, 0.12), transparent 24%),
-    linear-gradient(180deg, #06101d 0%, #0d1321 38%, #121d31 100%);
-  color: #f5f7ff;
-}
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
-body {
-  margin: 0;
-  padding: 0;
-  font-family: inherit;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: inherit;
-  color: inherit;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html, body, #root {
-  width: 100%;
-  height: 100%;
-}
-
-a {
-  color: inherit;
-}
-
-button:hover,
-a:hover {
-  transform: translateY(-1px);
-}
-
-h1, h2, h3, p {
-  margin-top: 0;
-}
-
-/* Tailwind CSS will be applied here */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#0f172a] text-slate-200 font-['Outfit',sans-serif];
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+      radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+      radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+    background-attachment: fixed;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl;
+  }
+  
+  .glass-card {
+    @apply glass rounded-3xl p-6 transition-all duration-300 hover:bg-white/15 hover:border-white/30 hover:scale-[1.02] shadow-indigo-500/10 hover:shadow-indigo-500/20;
+  }
+
+  .glass-button {
+    @apply px-6 py-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/20 transition-all font-semibold active:scale-95;
+  }
+
+  .glass-input {
+    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white/10 transition-all;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400;
+  }
+
+  .nav-link {
+    @apply px-4 py-2 rounded-xl transition-all hover:bg-white/10 text-slate-400 hover:text-white font-medium flex items-center gap-2;
+  }
+
+  .nav-link-active {
+    @apply nav-link bg-indigo-500/20 text-indigo-400 border border-indigo-500/30;
+  }
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
