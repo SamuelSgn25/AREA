@@ -1,4 +1,4 @@
-import { Service, Action, Reaction } from '../../models';
+import { Service } from '../models';
 
 /**
  * Google Service Integration
