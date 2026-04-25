@@ -10,6 +10,13 @@ export const Notification = ({ notification, onClose }) => {
     info: '#3b82f6'
   };
 
+  const typeIcons = {
+    success: 'OK',
+    error: 'X',
+    warning: '!',
+    info: 'i'
+  };
+
   useEffect(() => {
     const timer = setTimeout(onClose, notification.duration || 5000);
     return () => clearTimeout(timer);
@@ -23,17 +30,14 @@ export const Notification = ({ notification, onClose }) => {
       }}
     >
       <div className="notification-header">
-        <div className="notification-icon">
-          {notification.type === 'success' && '✓'}
-          {notification.type === 'error' && '✕'}
-          {notification.type === 'warning' && '!'}
-          {notification.type === 'info' && 'ℹ'}
-        </div>
+        <div className="notification-icon">{typeIcons[notification.type || 'info']}</div>
         <div className="notification-content">
           <h3>{notification.title}</h3>
           {notification.message && <p>{notification.message}</p>}
         </div>
-        <button className="notification-close" onClick={onClose}>×</button>
+        <button className="notification-close" onClick={onClose}>
+          x
+        </button>
       </div>
       <div className="notification-progress"></div>
     </div>
