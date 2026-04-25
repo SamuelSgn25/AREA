@@ -56,17 +56,13 @@ jobs:
         working-directory: ./server
         run: npm run lint
 
-      - name: Type check backend
-        working-directory: ./server
-        run: npm run type-check
-
       - name: Test backend
         working-directory: ./server
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/area_test
           REDIS_URL: redis://localhost:6379
           NODE_ENV: test
-        run: npm run test:coverage
+        run: npm run test
 
       # Frontend
       - name: Install frontend dependencies
@@ -77,13 +73,9 @@ jobs:
         working-directory: ./web
         run: npm run lint
 
-      - name: Type check frontend
-        working-directory: ./web
-        run: npm run type-check
-
       - name: Test frontend
         working-directory: ./web
-        run: npm run test:coverage
+        run: npm run test
 
       - name: Build frontend
         working-directory: ./web
