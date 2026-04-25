@@ -26,6 +26,7 @@ export const useAuthStore = create((set) => ({
 // Notifications Store
 export const useNotificationStore = create((set, get) => ({
   notifications: [],
+  seenApiNotificationIds: [],
   
   addNotification: (notification) => {
     const id = Date.now();
@@ -50,6 +51,16 @@ export const useNotificationStore = create((set, get) => ({
   
   clearNotifications: () => {
     set({ notifications: [] });
+  },
+
+  markApiNotificationSeen: (id) => {
+    if (get().seenApiNotificationIds.includes(id)) {
+      return;
+    }
+
+    set((state) => ({
+      seenApiNotificationIds: [...state.seenApiNotificationIds, id]
+    }));
   }
 }));
 
