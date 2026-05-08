@@ -1,86 +1,117 @@
-import React, { useState } from 'react';
-import { useNotification } from '../components/Notification';
-import { authAPI } from '../services/api';
-import { useAuthStore } from '../store/store';
+import React from 'react';
 
-function Profile() {
-  const notify = useNotification();
-  const user = useAuthStore((state) => state.user);
-  const setUser = useAuthStore((state) => state.setUser);
-  const [form, setForm] = useState({
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    username: user?.username || '',
-    email: user?.email || ''
-  });
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    authAPI
-      .updateProfile(form)
-      .then((response) => {
-        setUser(response.data.data);
-        notify.success('Profil mis a jour', 'Vos informations ont ete sauvegardees.');
-      })
-      .catch(() => notify.error('Mise a jour impossible', 'Le profil n a pas pu etre sauvegarde.'));
-  };
-
+const Profile = () => {
   return (
-    <section className="page">
-      <div className="split-layout">
-        <article className="glass-card">
-          <p className="eyebrow">Identity</p>
-          <h2>Votre profil AREA</h2>
-          <div className="profile-hero">
-            <div className="avatar-ring">{form.firstName?.[0] || form.username?.[0] || 'A'}</div>
-            <div>
-              <strong>{form.firstName} {form.lastName}</strong>
-              <p>{form.email}</p>
+    <div className="space-y-12 animate-in fade-in zoom-in-95 duration-700">
+      <header className="max-w-2xl">
+        <h1 className="text-6xl font-black tracking-tighter text-white">System Settings</h1>
+        <p className="mt-4 text-slate-400 font-medium leading-relaxed">
+          Configure your personal identity and environment variables. These settings define how nodes perceive your identity during cross-protocol authentication.
+        </p>
+      </header>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+        <div className="lg:col-span-2 space-y-8">
+          {/* Personal Info */}
+          <section className="glass-card space-y-8">
+            <h3 className="text-2xl font-black text-white flex items-center gap-3">
+              <span className="w-1.5 h-6 bg-indigo-500 rounded-full"></span>
+              Identity
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase font-black text-slate-600 tracking-widest ml-1">Username</label>
+                <input className="glass-input" value="samuelsgn25" disabled />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] uppercase font-black text-slate-600 tracking-widest ml-1">Display Name</label>
+                <input className="glass-input" defaultValue="Samuel SGN" />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-[10px] uppercase font-black text-slate-600 tracking-widest ml-1">Email Protocol Address</label>
+                <input className="glass-input" value="samuel@example.com" disabled />
+              </div>
+            </div>
+
+            <div className="pt-4 flex justify-end">
+              <button className="primary-button !px-8">Update Identity</button>
+            </div>
+          </section>
+
+          {/* Security */}
+          <section className="glass-card space-y-8">
+            <h3 className="text-2xl font-black text-white flex items-center gap-3">
+              <span className="w-1.5 h-6 bg-rose-500 rounded-full"></span>
+              Security Protocol
+            </h3>
+            
+            <div className="space-y-6">
+              <div className="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/5">
+                <div>
+                  <p className="font-bold text-white">Two-Factor Authentication</p>
+                  <p className="text-xs text-slate-500">Secure your account with an secondary biometric passkey.</p>
+                </div>
+                <div className="w-12 h-6 rounded-full bg-slate-800 p-1 flex items-center cursor-pointer">
+                  <div className="w-4 h-4 rounded-full bg-slate-600"></div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-white/[0.02] rounded-2xl border border-white/5">
+                <div>
+                  <p className="font-bold text-white">Advanced Session Encryption</p>
+                  <p className="text-xs text-slate-500">Rotate JWT tokens every 12 hours for maximum security.</p>
+                </div>
+                <div className="w-12 h-6 rounded-full bg-indigo-500/20 p-1 flex items-center justify-end cursor-pointer">
+                  <div className="w-4 h-4 rounded-full bg-indigo-400"></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-white/5">
+              <button className="glass-button text-rose-400 border-rose-500/20 hover:bg-rose-500/5">Reset Password Cluster</button>
+            </div>
+          </section>
+        </div>
+
+        {/* Sidebar info */}
+        <div className="space-y-8">
+          <div className="glass-card p-10 flex flex-col items-center text-center">
+            <div className="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-indigo-500 to-fuchsia-500 mb-6 shadow-2xl shadow-indigo-500/40">
+              <div className="w-full h-full rounded-full bg-slate-900 border-4 border-[#030712] flex items-center justify-center text-5xl font-black text-white">S</div>
+            </div>
+            <h4 className="text-2xl font-black text-white">Samuel SGN</h4>
+            <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mt-1">Administrator Node</p>
+            
+            <div className="mt-8 w-full space-y-3">
+              <div className="flex justify-between text-xs py-3 border-b border-white/5">
+                <span className="text-slate-500 font-bold uppercase tracking-tighter">System ID</span>
+                <span className="text-white font-mono">NODE-88.XP.42</span>
+              </div>
+              <div className="flex justify-between text-xs py-3 border-b border-white/5">
+                <span className="text-slate-500 font-bold uppercase tracking-tighter">Uptime</span>
+                <span className="text-white font-mono">152 Days</span>
+              </div>
+              <div className="flex justify-between text-xs py-3">
+                <span className="text-slate-500 font-bold uppercase tracking-tighter">Integrations</span>
+                <span className="text-emerald-400 font-black">All operational</span>
+              </div>
             </div>
           </div>
-        </article>
 
-        <article className="glass-card">
-          <p className="eyebrow">Settings</p>
-          <h2>Coordonnees utilisateur</h2>
-          <form className="auth-form" onSubmit={handleSubmit}>
-            <label>
-              Prenom
-              <input
-                value={form.firstName}
-                onChange={(event) => setForm((current) => ({ ...current, firstName: event.target.value }))}
-              />
-            </label>
-            <label>
-              Nom
-              <input
-                value={form.lastName}
-                onChange={(event) => setForm((current) => ({ ...current, lastName: event.target.value }))}
-              />
-            </label>
-            <label>
-              Pseudo
-              <input
-                value={form.username}
-                onChange={(event) => setForm((current) => ({ ...current, username: event.target.value }))}
-              />
-            </label>
-            <label>
-              Email
-              <input
-                type="email"
-                value={form.email}
-                onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
-              />
-            </label>
-            <button type="submit" className="primary-button">
-              Sauvegarder
+          <div className="glass-card !bg-indigo-600/10 border-indigo-500/20">
+            <h4 className="text-lg font-black text-indigo-300 mb-2">Enterprise Plan</h4>
+            <p className="text-xs text-slate-400 leading-relaxed font-medium">
+              You are currently on the Pro Tier. Upgrade to Enterprise for multi-tenant orchestration and advanced webhook routing.
+            </p>
+            <button className="w-full mt-6 py-3 glass-button bg-indigo-500/20 text-white font-black text-[10px] uppercase tracking-widest hover:bg-indigo-500/30">
+              Upgrade System
             </button>
-          </form>
-        </article>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
   );
-}
+};
 
 export default Profile;
