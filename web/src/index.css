@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,52 +6,111 @@
 
 @layer base {
   body {
-    @apply bg-[#0f172a] text-slate-200 font-['Outfit',sans-serif];
+    @apply bg-[#030712] text-slate-200 font-['Outfit',sans-serif] selection:bg-indigo-500/30;
     background-image: 
-      radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-      radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-      radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+      radial-gradient(at 0% 0%, hsla(260, 40%, 10%, 1) 0, transparent 40%),
+      radial-gradient(at 100% 0%, hsla(330, 40%, 10%, 1) 0, transparent 40%),
+      radial-gradient(at 50% 100%, hsla(220, 40%, 10%, 1) 0, transparent 40%);
     background-attachment: fixed;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-['Space+Grotesk',sans-serif] tracking-tight;
   }
 }
 
 @layer components {
   .glass {
-    @apply bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl;
+    @apply bg-white/5 backdrop-blur-[12px] border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
   }
   
   .glass-card {
-    @apply glass rounded-3xl p-6 transition-all duration-300 hover:bg-white/15 hover:border-white/30 hover:scale-[1.02] shadow-indigo-500/10 hover:shadow-indigo-500/20;
+    @apply glass rounded-3xl p-6 transition-all duration-500 hover:bg-white/[0.08] hover:border-white/20 hover:shadow-indigo-500/10;
   }
 
   .glass-button {
-    @apply px-6 py-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/20 transition-all font-semibold active:scale-95;
+    @apply relative px-6 py-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 font-semibold active:scale-95 flex items-center justify-center gap-2 overflow-hidden;
+  }
+
+  .glass-button::after {
+    @apply content-[''] absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full transition-transform duration-1000 ease-in-out;
+  }
+
+  .glass-button:hover::after {
+    @apply translate-x-full;
+  }
+
+  .primary-button {
+    @apply glass-button bg-indigo-600/20 border-indigo-500/30 hover:bg-indigo-600/30 text-indigo-300;
+  }
+
+  .danger-button {
+    @apply glass-button bg-rose-600/20 border-rose-500/30 hover:bg-rose-600/30 text-rose-300;
   }
 
   .glass-input {
-    @apply w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:bg-white/10 transition-all;
+    @apply w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:bg-white/[0.08] transition-all duration-300 placeholder:text-slate-500;
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 font-bold;
   }
 
   .nav-link {
-    @apply px-4 py-2 rounded-xl transition-all hover:bg-white/10 text-slate-400 hover:text-white font-medium flex items-center gap-2;
+    @apply flex items-center gap-4 px-6 py-4 rounded-2xl transition-all duration-300 text-slate-400 hover:text-white hover:bg-white/5;
   }
 
-  .nav-link-active {
-    @apply nav-link bg-indigo-500/20 text-indigo-400 border border-indigo-500/30;
+  .nav-link.active {
+    @apply bg-white/10 text-white border border-white/10 shadow-lg shadow-indigo-500/5;
   }
+
+  .pill {
+    @apply px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase border;
+  }
+
+  .pill-success {
+    @apply bg-emerald-500/10 text-emerald-400 border-emerald-500/20;
+  }
+
+  .pill-warning {
+    @apply bg-amber-500/10 text-amber-400 border-amber-500/20;
+  }
+
+  .pill-danger {
+    @apply bg-rose-500/10 text-rose-400 border-rose-500/20;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
 }
 
 /* Animations */
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.05); }
 }
 
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+
+/* Noise texture fix */
+.noise-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.03;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
