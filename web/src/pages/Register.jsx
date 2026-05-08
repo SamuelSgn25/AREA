@@ -11,85 +11,85 @@ const Register = () => {
     lastName: ''
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
     try {
       await axios.post('http://localhost:8080/api/auth/register', formData);
       navigate('/login');
     } catch (err) {
-      setError(err.response?.data?.error || 'Registration failed');
+      setError(err.response?.data?.error || 'Registration failed. Check system constraints.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 relative overflow-hidden">
-      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-700"></div>
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-indigo-600/20 rounded-full blur-[120px] animate-pulse-slow"></div>
+      <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-fuchsia-600/20 rounded-full blur-[120px] animate-pulse-slow transition-all delay-1000"></div>
 
-      <div className="w-full max-w-lg p-8 m-4 bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl z-10">
-        <h2 className="text-4xl font-bold text-white text-center mb-6 tracking-tight">Create Account</h2>
+      <div className="w-full max-w-lg glass-card !p-12 z-10 space-y-10">
+        <div className="text-center space-y-2">
+          <div className="w-16 h-16 bg-gradient-to-tr from-indigo-500 to-fuchsia-500 rounded-2xl flex items-center justify-center text-white text-3xl font-black mx-auto mb-6 shadow-2xl shadow-indigo-500/20">A</div>
+          <h2 className="text-4xl font-black text-white tracking-tighter">Initialize Node</h2>
+          <p className="text-slate-400 font-medium text-sm">Register your identity within the AREA protocol.</p>
+        </div>
         
         {error && (
-          <div className="bg-red-500/20 border border-red-500/50 text-red-100 px-4 py-2 rounded-xl mb-6 text-sm text-center">
+          <div className="bg-rose-500/10 border border-rose-500/20 text-rose-400 px-4 py-3 rounded-2xl text-[10px] uppercase font-black tracking-widest text-center">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleRegister} className="grid grid-cols-2 gap-4">
-          <div className="col-span-1">
-            <label className="block text-sm font-medium text-purple-100 mb-2 ml-1">First Name</label>
+        <form onSubmit={handleRegister} className="grid grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase font-black text-slate-500 tracking-widest ml-1">First Name</label>
             <input
-              name="firstName"
-              onChange={handleChange}
-              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:bg-white/10 transition-all"
-              placeholder="John"
+              onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+              className="glass-input"
+              placeholder="E.g. John"
               required
             />
           </div>
-          <div className="col-span-1">
-            <label className="block text-sm font-medium text-purple-100 mb-2 ml-1">Last Name</label>
+          <div className="space-y-2">
+            <label className="text-[10px] uppercase font-black text-slate-500 tracking-widest ml-1">Last Name</label>
             <input
-              name="lastName"
-              onChange={handleChange}
-              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:bg-white/10 transition-all"
-              placeholder="Doe"
+              onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+              className="glass-input"
+              placeholder="E.g. Doe"
               required
             />
           </div>
-          <div className="col-span-2">
-            <label className="block text-sm font-medium text-purple-100 mb-2 ml-1">Username</label>
+          <div className="col-span-2 space-y-2">
+            <label className="text-[10px] uppercase font-black text-slate-500 tracking-widest ml-1">Universal Identifier</label>
             <input
-              name="username"
-              onChange={handleChange}
-              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:bg-white/10 transition-all"
-              placeholder="johndoe123"
+              onChange={(e) => setFormData({...formData, username: e.target.value})}
+              className="glass-input"
+              placeholder="johndoe_node"
               required
             />
           </div>
-          <div className="col-span-2">
-            <label className="block text-sm font-medium text-purple-100 mb-2 ml-1">Email Address</label>
+          <div className="col-span-2 space-y-2">
+            <label className="text-[10px] uppercase font-black text-slate-500 tracking-widest ml-1">Email Endpoint</label>
             <input
-              name="email"
               type="email"
-              onChange={handleChange}
-              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:bg-white/10 transition-all"
-              placeholder="name@example.com"
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              className="glass-input"
+              placeholder="user@system.io"
               required
             />
           </div>
-          <div className="col-span-2">
-            <label className="block text-sm font-medium text-purple-100 mb-2 ml-1">Password</label>
+          <div className="col-span-2 space-y-2">
+            <label className="text-[10px] uppercase font-black text-slate-500 tracking-widest ml-1">Encryption Secret</label>
             <input
-              name="password"
               type="password"
-              onChange={handleChange}
-              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-2xl text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:bg-white/10 transition-all"
+              onChange={(e) => setFormData({...formData, password: e.target.value})}
+              className="glass-input"
               placeholder="••••••••"
               required
             />
@@ -97,16 +97,18 @@ const Register = () => {
 
           <button
             type="submit"
-            className="col-span-2 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold rounded-2xl shadow-lg transform hover:scale-[1.01] transition-all mt-4"
+            disabled={loading}
+            className="col-span-2 primary-button !py-4 font-black uppercase tracking-widest text-xs mt-4 group"
           >
-            Create Account
+            {loading ? 'Processing...' : 'Establish Identity'}
+            {!loading && <span className="group-hover:translate-x-1 transition-transform">→</span>}
           </button>
         </form>
 
-        <p className="mt-8 text-center text-purple-100/70 text-sm">
-          Already have an account?{' '}
-          <Link to="/login" className="text-pink-400 font-semibold hover:underline">
-            Login
+        <p className="text-center text-slate-500 text-[10px] font-black uppercase tracking-[0.1em]">
+          Identity already exists?{' '}
+          <Link to="/login" className="text-indigo-400 hover:text-indigo-300 transition-colors">
+            Authorize Now
           </Link>
         </p>
       </div>
